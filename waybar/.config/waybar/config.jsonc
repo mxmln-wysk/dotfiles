@@ -1,0 +1,83 @@
+{
+    "position": "top",
+    "modules-left": ["hyprland/workspaces","hyprland/window", "custom/media"],
+    "modules-center": [ "clock"],
+    "modules-right": ["network", "pulseaudio", "backlight", "battery", "custom/logout"], //"power-profiles-daemon", "custom/power"
+    "clock": {
+      "format": "{:%H:%M}",
+      "tooltip-format": "<big>{:%Y.%m.%d}</big>\n<tt><small>{calendar}</small></tt>"
+    },
+    "battery": {
+      "states": {
+        "warning": 30,
+        "critical": 15
+      },
+      "format": "<span size='13000' foreground='#a6e3a1'>{icon} </span> {capacity}%",
+      "format-warning": "<span size='13000' foreground='#B1E3AD'>{icon} </span> {capacity}%",
+      "format-critical": "<span size='13000' foreground='#E38C8F'>{icon} </span> {capacity}%",
+      "format-charging": "<span size='13000' foreground='#B1E3AD'> </span>{capacity}%",
+      "format-plugged": "<span size='13000' foreground='#B1E3AD'> </span>{capacity}%",
+      "format-alt": "<span size='13000' foreground='#B1E3AD'>{icon} </span> {time}",
+      "format-full": "<span size='13000' foreground='#B1E3AD'> </span>{capacity}%",
+      "format-icons": ["", "", "", "", ""],
+      "tooltip-format": "{time}"
+    },
+    "backlight": {
+        "format": "{percent}% {icon}",
+        "format-icons": ["", "", "", "", "", "", "", "", ""]
+    },
+    "network": {
+      "format-wifi": "<span size='13000' foreground='#f5e0dc'> </span>",
+      "format-ethernet": "<span size='13000' foreground='#f5e0dc'>󰤭  </span> Disconnected",
+      "format-linked": "{ifname} (No IP) ",
+      "format-disconnected": "<span size='13000' foreground='#f5e0dc'>  </span>Disconnected",
+      "tooltip-format-wifi": "{essid} ({signalStrength}%) \uf1eb",
+      //"on-click" : 
+    },
+     "power-profiles-daemon": { //i dont think here is a function yet
+      "format": "{icon}",
+      "tooltip-format": "Power profile: {profile}\nDriver: {driver}",
+      "tooltip": true,
+      "format-icons": {
+        "default": "<span size='13000' foreground='#B1E3AD'></span>",
+        "performance": "<span size='13000' foreground='#B1E3AD'></span>",
+        "balanced": "<span size='13000' foreground='#B1E3AD'></span>",
+        "power-saver": "<span size='13000' foreground='#B1E3AD'></span>"
+      }
+    },
+    "pulseaudio": { 
+        "format": "{volume}% <span size='13000'>{icon}</span> {format_source}",
+        "format-bluetooth": "{volume}% {icon} {format_source}",
+        "format-bluetooth-muted": "󰖁 {icon} {format_source}",
+        "format-muted": "<span size='13000'>󰖁</span> {format_source}",
+        "format-source": "{volume}% <span size='13000'></span>",
+        "format-source-muted": "<span size='13000'></span>",
+        "format-icons": {
+            "headphone": "",
+            "hands-free": "",
+            "headset": "",
+            "phone": "",
+            "portable": "",
+            "car": "",
+            "default": ["", "", " "]
+        },
+        "on-click": "pavucontrol"
+    },
+     "custom/media": {
+        "format": "{icon} {text}",
+        "return-type": "json",
+        "max-length": 40,
+        "format-icons": {
+            "spotify": "",
+            "default": "🎜"
+        },
+        "escape": true,
+        "exec": "$HOME/.config/waybar/mediaplayer.py 2> /dev/null" // Script in resources folder
+        // "exec": "$HOME/.config/waybar/mediaplayer.py --player spotify 2> /dev/null" // Filter player based on name
+    },
+    "custom/logout":{
+     	"format": "<span size='13000'>⏻</span> ",
+     	"tooltip": false,
+     	"on-click": "wlogout"
+    },
+  }
