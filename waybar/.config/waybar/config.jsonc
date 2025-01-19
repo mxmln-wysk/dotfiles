@@ -1,8 +1,8 @@
 {
     "position": "top",
-    "modules-left": ["hyprland/workspaces","hyprland/window", "custom/media"],
+    "modules-left": ["hyprland/workspaces", "custom/play-pause"], //,"hyprland/window", "custom/next"
     "modules-center": [ "clock"],
-    "modules-right": ["network", "pulseaudio", "backlight", "battery", "custom/logout"], //"power-profiles-daemon", "custom/power"
+    "modules-right": ["network", "pulseaudio", "backlight", "battery","custom/notification", "custom/logout"], //"power-profiles-daemon", "custom/power"
     "clock": {
       "format": "{:%H:%M}",
       "tooltip-format": "<big>{:%Y.%m.%d}</big>\n<tt><small>{calendar}</small></tt>"
@@ -63,21 +63,35 @@
         },
         "on-click": "pavucontrol"
     },
-     "custom/media": {
-        "format": "{icon} {text}",
-        "return-type": "json",
-        "max-length": 40,
-        "format-icons": {
-            "spotify": "",
-            "default": "🎜"
-        },
-        "escape": true,
-        "exec": "$HOME/.config/waybar/mediaplayer.py 2> /dev/null" // Script in resources folder
-        // "exec": "$HOME/.config/waybar/mediaplayer.py --player spotify 2> /dev/null" // Filter player based on name
-    },
     "custom/logout":{
      	"format": "<span size='13000'>⏻</span> ",
      	"tooltip": false,
      	"on-click": "wlogout"
     },
+    "custom/play-pause": {
+      "tooltip": true,
+      "format": " {icon}{}",
+      "return-type": "json",
+      "format-icons": {
+          "Paused": " ",
+          "Playing": " "
+      },
+      "on-click-right": "playerctl next",
+      "on-click": "playerctl play-pause",
+      "hide-empty-text": true,
+      "max-length": 40,
+      "exec": "playerctl -a metadata --format '{\"text\": \"{{markup_escape(title)}} - {{artist}}\", \"tooltip\": \"{{markup_escape(title)}}, {{markup_escape(album)}}, {{artist}} \", \"alt\": \"{{status}}\", \"class\": \"{{status}}\"}' -F",
+    },
+    "custom/next": {
+      "format": "{icon}{}",
+      "tooltip": true,
+      "return-type": "json",
+      "hide-empty-text": true,
+      "on-click": "playerctl next",
+      "exec": "playerctl -a metadata --format '{\"alt\": \"{{status}}\", \"class\": \"{{status}}\"}' -F",
+      "format-icons": {
+        "Paused": " ",
+        "Playing": "󰒭 "
+      },
+    }
   }

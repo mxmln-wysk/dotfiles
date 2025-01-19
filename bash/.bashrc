@@ -11,7 +11,7 @@
 alias ..="cd ..";
 alias cdn="cd ~/nix-conf/";
 alias update="sudo nix flake update";
-alias switch="sudo nixos-rebuild switch --flake";
+alias switch="sudo nixos-rebuild switch --flake ~/nix-conf/";
 alias remove="sudo nix-collect-garbage -d";
 alias generations="sudo nix-env -p /nix/var/nix/profiles/system --list-generations";
 alias list="nix-store --query --requisites /run/current-system | cut -d- -f2- | sort | uniq";
