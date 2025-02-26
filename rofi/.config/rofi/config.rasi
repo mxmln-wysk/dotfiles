@@ -1,0 +1,18 @@
+configuration{
+    modi: "";
+    show-icons: false;
+    terminal: "kitty";
+    drun-display-format: "{name}";
+    location: 0;
+    disable-history: false;
+    hide-scrollbar: false;
+    display-drun: "";
+    sidebar-mode: false;
+    placeholder: "Type here";
+
+}
+entry {
+    placeholder: "Type here";
+}
+
+@theme "~/.cache/wal/colors-rofi-light"

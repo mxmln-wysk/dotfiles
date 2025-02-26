@@ -5,6 +5,7 @@
 [[ $- != *i* ]] && return
 
 
+source ~/.cache/wal/colors-tty.sh
 
 
 #alias
@@ -21,11 +22,11 @@ alias repair1="sudo ntfsfix -d  /dev/sdb1";
 
 
 #prompt
-source ~/.bashScripts/git-prompt.sh
+source ~/.bash_scripts/git-prompt.sh
 PS1='[\[$(tput bold)\]';
-PS1+='\[$(tput setaf 214)\]\u'; #user orange
-PS1+='\[$(tput setaf 112)\]@\h'; #host green
-PS1+='\[$(tput setaf 75)\] \W'; #directinary blue
+PS1+='\[\033[0;32m\]\u'; 
+PS1+='\[\033[1;33m\]@\h';
+PS1+='\[\033[1;33m\] \w';
 PS1+='\[$(tput setaf 220)\]\[$(__git_ps1 " {%s}")\]';
 PS1+='\[$(tput sgr0)\]] => '; #else white
 
