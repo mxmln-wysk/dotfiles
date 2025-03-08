@@ -1,6 +1,10 @@
 #!/bin/bash
 
 PID_FILE="/tmp/$(basename "$0").pid"
+current_date=$(date +'%Y-%m-%d')
+DB_FILE="$DB_DIR/$current_date.db"
+
+declare -A window_counts
 
 check_and_stop_other_process() {
     # Falls eine alte PID-Datei existiert, versuche den Prozess zu beenden
@@ -22,8 +26,6 @@ check_and_stop_other_process() {
 # Beispielaufruf der Funktion
 check_and_stop_other_process
 
-DB_FILE="$HOME/.window_time/$(date +'%Y-%m-%d').db"
-declare -A window_counts
 
 # Sicherstellen, dass die Datei existiert
 touch "$DB_FILE"
@@ -45,7 +47,17 @@ save_data() {
         echo "$key=${window_counts[$key]}"
     done
     hyprctl notify -1 2000 0 "Daten gespeichert"
-    echo "Daten gespeichert."
+
+     # Falls sich das Datum geändert hat, erstelle eine neue Datei und lösche alte Daten
+    local new_date=$(date +'%Y-%m-%d')
+
+    if [ "$new_date" != "$current_date" ]; then
+        echo "Neuer Tag erkannt: Wechsle zu $new_date"
+        current_date="$new_date"
+        DB_FILE="$DB_DIR/$current_date.db"
+        unset window_counts
+        declare -A window_counts
+    fi
 }
 
 #signals
@@ -64,7 +76,6 @@ get_active_brave_tab() {
 }
 
 while true; do
-    
     # Aktuelles aktive Fenster abrufen
     window=$(hyprctl activewindow | grep initialClass | awk '{print $2}')
     
@@ -80,7 +91,7 @@ while true; do
     # Fensterzähler erhöhen
     ((window_counts["$window"]++))
 
-    echo "[$(date +'%Y-%m-%d %H:%M:%S')] $window wurde auf ${window_counts[$window]} erhöht. Timer = ${timerCount}"
+    #echo "[$(date +'%Y-%m-%d %H:%M:%S')] $window wurde auf ${window_counts[$window]} erhöht. Timer = ${timerCount}"
     
     # save all 2 min
     if [ "$timerCount" == "120" ]; then
