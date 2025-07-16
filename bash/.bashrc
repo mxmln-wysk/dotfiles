@@ -11,6 +11,7 @@ source ~/.cache/wal/colors-tty.sh
 #alias
 alias ..="cd ..";
 alias cdn="cd ~/nix-conf/";
+alias cdd="cd ~/.dotfiles/"
 alias update="sudo nix flake update";
 alias switch="sudo nixos-rebuild switch --flake ~/nix-conf/";
 alias remove="sudo nix-collect-garbage -d";

@@ -1,107 +1,121 @@
 #!/bin/bash
 
 PID_FILE="/tmp/$(basename "$0").pid"
+DB_DIR="$HOME/.window_time"
+mkdir -p "$DB_DIR"
+
 current_date=$(date +'%Y-%m-%d')
 DB_FILE="$DB_DIR/$current_date.db"
-
 declare -A window_counts
 
 check_and_stop_other_process() {
-    # Falls eine alte PID-Datei existiert, versuche den Prozess zu beenden
     if [ -f "$PID_FILE" ]; then
         old_pid=$(cat "$PID_FILE")
-
-        # Überprüfen, ob der alte Prozess noch läuft
         if ps -p "$old_pid" > /dev/null 2>&1; then
             echo "Alte Instanz läuft (PID: $old_pid). Sende SIGUSR1..."
             kill -USR1 "$old_pid"
-            sleep 1  # Warte kurz, damit der alte Prozess beendet wird
+            sleep 1
         fi
     fi
-
-    # Speichere die aktuelle PID in die Datei (ersetzt die alte)
     echo $$ > "$PID_FILE"
 }
 
-# Beispielaufruf der Funktion
 check_and_stop_other_process
 
-
-# Sicherstellen, dass die Datei existiert
-touch "$DB_FILE"
+# Werte aus Datei laden (falls vorhanden)
+if [ -f "$DB_FILE" ]; then
+    while IFS='=' read -r key value; do
+        window_counts["$key"]=$value
+    done < "$DB_FILE"
+else
+    touch "$DB_FILE"
+fi
 
 timerCount=1
 
-# Werte aus Datei laden
-while IFS='=' read -r key value; do
-    window_counts["$key"]=$value
-done < "$DB_FILE"
-
-# Funktion zum Speichern der Daten
 save_data() {
-    DB_FILE="$HOME/.window_time/$(date +'%Y-%m-%d').db"
-    echo "Speichere Daten..."
+    echo "Speichere Daten in $DB_FILE..."
     > "$DB_FILE"
     for key in "${!window_counts[@]}"; do
         echo "$key=${window_counts[$key]}" >> "$DB_FILE"
-        echo "$key=${window_counts[$key]}"
     done
     hyprctl notify -1 2000 0 "Daten gespeichert"
 
-     # Falls sich das Datum geändert hat, erstelle eine neue Datei und lösche alte Daten
+    # Nach dem Speichern prüfen, ob der Tag gewechselt hat
     local new_date=$(date +'%Y-%m-%d')
-
     if [ "$new_date" != "$current_date" ]; then
-        echo "Neuer Tag erkannt: Wechsle zu $new_date"
+        echo "Neuer Tag erkannt: $new_date"
         current_date="$new_date"
         DB_FILE="$DB_DIR/$current_date.db"
+
+        # Neue Datei anlegen & Zähler zurücksetzen
         unset window_counts
         declare -A window_counts
+        touch "$DB_FILE"
     fi
 }
 
-#signals
-trap " hyprctl notify -1 2000 0 'Signal erhalten'; save_data; exit" SIGINT SIGTERM SIGUSR1
-
+trap "hyprctl notify -1 2000 0 'Signal erhalten'; save_data; exit" SIGINT SIGTERM SIGUSR1
 
 get_active_brave_tab() {
-    # Brave's Debugging API aufrufen
     local json=$(curl -s "http://localhost:9222/json")
-
-    # Erstes Tab-Element auslesen und URL extrahieren
     local url=$(echo "$json" | jq -r '.[0] | .url')
-
-    # Nur die Domain extrahieren
     echo "$url" | awk -F/ '{print $3}'
 }
 
-while true; do
-    # Aktuelles aktive Fenster abrufen
-    window=$(hyprctl activewindow | grep initialClass | awk '{print $2}')
+BLOCKED_SITES=("lichess.org" "de.crazygames.com" "www.twitch.tv" "www.youtube.com")
+
+handle_brave_url() {
+    local json=$(curl -s "http://localhost:9222/json")
+    local tabs_count=$(echo "$json" | jq 'length')
     
-    # Falls kein Fenster erkannt wurde, nächsten Durchlauf
+    for ((i = 0; i < tabs_count; i++)); do
+        local url=$(echo "$json" | jq -r ".[$i].url")
+        local id=$(echo "$json" | jq -r ".[$i].id")
+
+        for blocked in "${BLOCKED_SITES[@]}"; do
+            if [[ "$url" == *"$blocked"* ]]; then
+                echo "⚠️ Blockierte Seite entdeckt: $url – Tab wird geschlossen."
+                hyprctl notify -1 3000 1 "Blockierte Seite '$blocked' geschlossen!"
+                curl -s "http://localhost:9222/json/close/$id" > /dev/null
+                sleep 1
+                json=$(curl -s "http://localhost:9222/json")
+                local remaining_tabs=$(echo "$json" | jq 'length')
+                if (( remaining_tabs == 0 )); then
+                    echo "Keine weiteren Tabs mehr – Brave wird beendet."
+                    pkill brave-browser
+                fi
+                return 1
+            fi
+        done
+    done
+
+    window=$(echo "$json" | jq -r '.[0].url' | awk -F/ '{print $3}')
+    return 0
+}
+
+# Direkt nach Start einmal speichern, um Verluste zu vermeiden
+save_data
+
+while true; do
+    window=$(hyprctl activewindow | grep initialClass | awk '{print $2}')
     [ -z "$window" ] && sleep 1 && continue
 
-    # Falls Brave aktiv ist, den Fenstertitel als Key nutzen
     if [ "$window" == "brave-browser" ]; then
-        window="$(get_active_brave_tab)"
-        #window=$(hyprctl activewindow | grep title | awk '{print $2}')
+        if ! handle_brave_url; then
+            sleep 2
+            continue
+        fi
     fi
 
-    # Fensterzähler erhöhen
     ((window_counts["$window"]++))
+    current_window="${window_counts[$window]}"
 
-    #echo "[$(date +'%Y-%m-%d %H:%M:%S')] $window wurde auf ${window_counts[$window]} erhöht. Timer = ${timerCount}"
-    
-    # save all 2 min
     if [ "$timerCount" == "120" ]; then
         save_data
         timerCount=0
     fi
-    
+
     sleep 1
-
-    timerCount=$((timerCount+=1))
+    timerCount=$((timerCount + 1))
 done
-
-
