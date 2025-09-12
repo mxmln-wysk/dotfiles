@@ -63,7 +63,9 @@ get_active_brave_tab() {
     echo "$url" | awk -F/ '{print $3}'
 }
 
-BLOCKED_SITES=("lichess.org" "de.crazygames.com" "www.twitch.tv" "www.youtube.com")
+BLOCKED_SITES=("lichess.org" "de.crazygames.com" "www.twitch.tv" "www.youtube.com" "www.jetpunk.com")
+#BLOCKED_SITES=("de.crazygames.com" "www.twitch.tv" "www.youtube.com" "www.jetpunk.com")
+#BLOCKED_SITES=("de.crazygames.com" "www.twitch.tv" "www.jetpunk.com")
 
 handle_brave_url() {
     local json=$(curl -s "http://localhost:9222/json")
@@ -75,24 +77,37 @@ handle_brave_url() {
 
         for blocked in "${BLOCKED_SITES[@]}"; do
             if [[ "$url" == *"$blocked"* ]]; then
+                # Spezialfall YouTube → erlauben wenn embed drin vorkommt
+                if [[ "$blocked" == "www.youtube.com" && "$url" == *"/embed/"* ]]; then
+                    continue
+                fi
+
                 echo "⚠️ Blockierte Seite entdeckt: $url – Tab wird geschlossen."
                 hyprctl notify -1 3000 1 "Blockierte Seite '$blocked' geschlossen!"
+
+                # Tab schließen
                 curl -s "http://localhost:9222/json/close/$id" > /dev/null
-                sleep 1
+
+                sleep 1  # Kurze Pause, damit Tab wirklich schließt
+
+                # Brave komplett beenden, wenn keine brauchbaren Tabs mehr offen sind
                 json=$(curl -s "http://localhost:9222/json")
                 local remaining_tabs=$(echo "$json" | jq 'length')
                 if (( remaining_tabs == 0 )); then
                     echo "Keine weiteren Tabs mehr – Brave wird beendet."
                     pkill brave-browser
                 fi
+
                 return 1
             fi
         done
     done
 
+    # Kein blockierter Tab → ersten Tab verwenden
     window=$(echo "$json" | jq -r '.[0].url' | awk -F/ '{print $3}')
     return 0
 }
+
 
 # Direkt nach Start einmal speichern, um Verluste zu vermeiden
 save_data

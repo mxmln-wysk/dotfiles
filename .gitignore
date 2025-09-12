@@ -1,2 +1,4 @@
 bash/.bash_scripts/git-prompt.sh
+bash/.bash_scripts/Pywal/*
+neovim/*
 wlogout/.config/wlogout/assets/*
