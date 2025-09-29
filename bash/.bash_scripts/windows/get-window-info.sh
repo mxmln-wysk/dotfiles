@@ -2,7 +2,12 @@
 
 PID_FILE="/tmp/$(basename "$0").pid"
 DB_DIR="$HOME/.window_time"
+LOG_FILE="$DB_DIR/debug.log"
 mkdir -p "$DB_DIR"
+
+log() {
+    echo "[$(date +'%Y-%m-%d %H:%M:%S')] $1" >> "$LOG_FILE"
+}
 
 current_date=$(date +'%Y-%m-%d')
 DB_FILE="$DB_DIR/$current_date.db"
@@ -12,12 +17,28 @@ check_and_stop_other_process() {
     if [ -f "$PID_FILE" ]; then
         old_pid=$(cat "$PID_FILE")
         if ps -p "$old_pid" > /dev/null 2>&1; then
-            echo "Alte Instanz läuft (PID: $old_pid). Sende SIGUSR1..."
+            log "Alte Instanz läuft (PID: $old_pid). Sende SIGUSR1..."
             kill -USR1 "$old_pid"
             sleep 1
+            # prüfen ob die alte Instanz wirklich beendet wurde
+            if ps -p "$old_pid" > /dev/null 2>&1; then
+                log "Alte Instanz lebt noch – töte hart."
+                kill -TERM "$old_pid"
+                sleep 1
+            fi
         fi
     fi
     echo $$ > "$PID_FILE"
+    log "Neue Instanz gestartet mit PID $$"
+}
+
+cleanup() {
+    log "Beende Script (PID $$)..."
+    save_data
+    rm -f "$PID_FILE"
+    log "PID-File entfernt"
+    hyprctl notify -1 2000 0 "Script beendet und PID-File entfernt"
+    exit
 }
 
 check_and_stop_other_process
@@ -27,14 +48,16 @@ if [ -f "$DB_FILE" ]; then
     while IFS='=' read -r key value; do
         window_counts["$key"]=$value
     done < "$DB_FILE"
+    log "Daten aus $DB_FILE geladen"
 else
     touch "$DB_FILE"
+    log "Neue Datenbankdatei erstellt: $DB_FILE"
 fi
 
 timerCount=1
 
 save_data() {
-    echo "Speichere Daten in $DB_FILE..."
+    log "Speichere Daten in $DB_FILE..."
     > "$DB_FILE"
     for key in "${!window_counts[@]}"; do
         echo "$key=${window_counts[$key]}" >> "$DB_FILE"
@@ -44,7 +67,7 @@ save_data() {
     # Nach dem Speichern prüfen, ob der Tag gewechselt hat
     local new_date=$(date +'%Y-%m-%d')
     if [ "$new_date" != "$current_date" ]; then
-        echo "Neuer Tag erkannt: $new_date"
+        log "Neuer Tag erkannt: $new_date (alter: $current_date)"
         current_date="$new_date"
         DB_FILE="$DB_DIR/$current_date.db"
 
@@ -52,25 +75,18 @@ save_data() {
         unset window_counts
         declare -A window_counts
         touch "$DB_FILE"
+        log "Neue Datei für $new_date erstellt: $DB_FILE"
     fi
 }
 
-trap "hyprctl notify -1 2000 0 'Signal erhalten'; save_data; exit" SIGINT SIGTERM SIGUSR1
-
-get_active_brave_tab() {
-    local json=$(curl -s "http://localhost:9222/json")
-    local url=$(echo "$json" | jq -r '.[0] | .url')
-    echo "$url" | awk -F/ '{print $3}'
-}
+trap "cleanup" SIGINT SIGTERM SIGUSR1
 
 BLOCKED_SITES=("lichess.org" "de.crazygames.com" "www.twitch.tv" "www.youtube.com" "www.jetpunk.com")
-#BLOCKED_SITES=("de.crazygames.com" "www.twitch.tv" "www.youtube.com" "www.jetpunk.com")
-#BLOCKED_SITES=("de.crazygames.com" "www.twitch.tv" "www.jetpunk.com")
 
 handle_brave_url() {
     local json=$(curl -s "http://localhost:9222/json")
     local tabs_count=$(echo "$json" | jq 'length')
-    
+
     for ((i = 0; i < tabs_count; i++)); do
         local url=$(echo "$json" | jq -r ".[$i].url")
         local id=$(echo "$json" | jq -r ".[$i].id")
@@ -79,10 +95,11 @@ handle_brave_url() {
             if [[ "$url" == *"$blocked"* ]]; then
                 # Spezialfall YouTube → erlauben wenn embed drin vorkommt
                 if [[ "$blocked" == "www.youtube.com" && "$url" == *"/embed/"* ]]; then
+                    log "YouTube-Embed erkannt: $url – erlaubt"
                     continue
                 fi
 
-                echo "⚠️ Blockierte Seite entdeckt: $url – Tab wird geschlossen."
+                log "Blockierte Seite entdeckt: $url – Tab wird geschlossen."
                 hyprctl notify -1 3000 1 "Blockierte Seite '$blocked' geschlossen!"
 
                 # Tab schließen
@@ -94,7 +111,7 @@ handle_brave_url() {
                 json=$(curl -s "http://localhost:9222/json")
                 local remaining_tabs=$(echo "$json" | jq 'length')
                 if (( remaining_tabs == 0 )); then
-                    echo "Keine weiteren Tabs mehr – Brave wird beendet."
+                    log "Keine weiteren Tabs mehr – Brave wird beendet."
                     pkill brave-browser
                 fi
 
@@ -105,9 +122,9 @@ handle_brave_url() {
 
     # Kein blockierter Tab → ersten Tab verwenden
     window=$(echo "$json" | jq -r '.[0].url' | awk -F/ '{print $3}')
+    log "Aktiver Brave-Tab: $window"
     return 0
 }
-
 
 # Direkt nach Start einmal speichern, um Verluste zu vermeiden
 save_data
@@ -125,6 +142,7 @@ while true; do
 
     ((window_counts["$window"]++))
     current_window="${window_counts[$window]}"
+    log "Window: $window → Zeit: ${window_counts[$window]}s"
 
     if [ "$timerCount" == "120" ]; then
         save_data

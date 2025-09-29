@@ -28,7 +28,7 @@
         "days": "<span><b>{}</b></span>",
         "weeks": "<span><b>W{}</b></span>",
         "weekdays": "<span><b>{}</b></span>",
-        "today": "<span color='#eb4d4b'><b>{}</b></span>"
+        "today": "<span color='#010101'><b>{}</b></span>"
       }
     }
   },
