@@ -1,4 +1,5 @@
 #!/bin/bash
+#https://github.com/metafates/ChromiumPywal
 
 . ~/.cache/wal/colors.sh # import colors from pywal
 
