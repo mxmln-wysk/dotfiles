@@ -18,6 +18,12 @@ This project is build for Hyprland. It notes the time you spend on each program.
 You can find the script in the folder bash. I activate it in my hyprland.conf.
 
 
+## dependencies
+playerctl => waybar controll music player
+swaynotificationcenter => notifications
+jq => window tracker
+pywalfox-native
+
 ## Author
 
 - [@mxmln-wysk](https://www.github.com/mxmln-wysk)

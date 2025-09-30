@@ -1,6 +1,6 @@
 configuration{
     modi: "";
-    show-icons: false;
+    show-icons: true;
     terminal: "kitty";
     drun-display-format: "{name}";
     location: 0;
@@ -8,11 +8,17 @@ configuration{
     hide-scrollbar: false;
     display-drun: "";
     sidebar-mode: false;
-    placeholder: "Type here";
-
+    placeholder: "Search";
+    font: "Roboto 15";
 }
+
+@import "~/.cache/wal/colors-rofi-dark"
+
 entry {
-    placeholder: "Type here";
+    placeholder: "Search";
 }
 
-@theme "~/.cache/wal/colors-rofi-light"
+window {
+    location: center;
+    anchor: center;
+}
