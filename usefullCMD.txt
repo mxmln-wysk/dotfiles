@@ -1,0 +1,11 @@
+ps -a listet alle prozesse auf
+ps -a -ef mit details
+ps -a -ef | grep get-window mit suchbegriff get-window
+sudo kill -9 PID killt prozesse by PID
+
+
+
+swaync-client -rs swaync css reload
+swaync-client -R reload config
+swaync-client -t open Panel
+bash ~/.bash_scripts/windows/get-window-info.sh

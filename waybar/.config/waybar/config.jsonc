@@ -1,9 +1,14 @@
 {
   "position": "top",
+  "layer": "top",
   "modules-left": [
     "hyprland/workspaces",
     "custom/play-pause"
-  ], //,"hyprland/window",
+    //"hyprland/window"
+  ],
+  "hyprland/window": {
+    "separate-outputs": true
+  },
   "modules-center": [
     "clock"
   ],
@@ -11,6 +16,7 @@
     "power-profiles-daemon",
     "network",
     "pulseaudio",
+    //"custom/privacy-dots",
     "privacy",
     "backlight",
     "battery",
@@ -32,124 +38,133 @@
       }
     }
   },
-"battery": {
-  "states": {
-    "warning": 30,
-    "critical": 15
+  "battery": {
+    "states": {
+      "warning": 30,
+      "critical": 15
+    },
+    "format": "{icon} {capacity}%",
+    "format-warning": "{icon}  {capacity}%",
+    "format-critical": "{icon}  {capacity}%",
+    "format-charging": " {capacity}%",
+    "format-plugged": " {capacity}%",
+    "format-alt": "{icon}  {time}",
+    "format-full": " {capacity}%",
+    "format-icons": [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "tooltip-format": "{time} {power}w"
   },
-  "format": "{icon} {capacity}%",
-  "format-warning": "{icon}  {capacity}%",
-  "format-critical": "{icon}  {capacity}%",
-  "format-charging": " {capacity}%",
-  "format-plugged": " {capacity}%",
-  "format-alt": "{icon}  {time}",
-  "format-full": " {capacity}%",
-  "format-icons": [
-    "",
-    "",
-    "",
-    "",
-    ""
-  ],
-  "tooltip-format": "{time} {power}w"
-},
-"backlight": {
-  "scroll-step":2,
-  "format": "{icon} {percent}%",
-  "format-icons": [
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    ""
-  ],
-  "tooltip-format": "{percent}% Bildschirmhelligkeit"
-},
-"network": {
-  "format-wifi": " ",
-  "format-ethernet": "󰤭 ",
-  "format-linked": "{ifname} (No IP) ",
-  "format-disconnected": " ",
-  "tooltip-format-wifi": "{essid} ({signalStrength}%) \uf1eb \n{frequency} Ghz",
-  "on-click": "kitty -e nmtui"
-},
-"privacy": {
-	"icon-spacing": 4,
-	"icon-size": 18,
-	"transition-duration": 250,
-	"modules": [
-		{
-			"type": "screenshare",
-			"tooltip": true,
-			"tooltip-icon-size": 24
-		},
-		{
-			"type": "audio-in",
-			"tooltip": true,
-			"tooltip-icon-size": 24
-		}
-	],
-	"ignore-monitor": true
-},
-"power-profiles-daemon": {
-  "format": "{icon}",
-  "tooltip-format": "Power profile: {profile}\nDriver: {driver}",
-  "tooltip": true,
-  "format-icons": {
-    "default": "",
-    "performance": "",
-    "balanced": " ",
-    "power-saver": " "
+  "backlight": {
+    "scroll-step": 2,
+    "format": "{icon} {percent}%",
+    "format-icons": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "tooltip-format": "{percent}% Bildschirmhelligkeit"
+  },
+  "network": {
+    "format-wifi": " ",
+    "format-ethernet": "󰤭 ",
+    "format-linked": "{ifname} (No IP) ",
+    "format-disconnected": " ",
+    "tooltip-format-wifi": "{essid} ({signalStrength}%) \uf1eb \n{frequency} Ghz",
+    "on-click": "kitty -e nmtui"
+  },
+  "privacy": {
+    "icon-spacing": 4,
+    "icon-size": 18,
+    "transition-duration": 250,
+    "modules": [
+      {
+        "type": "screenshare",
+        "tooltip": true,
+        "tooltip-icon-size": 24
+      },
+      {
+        "type": "audio-in",
+        "tooltip": true,
+        "tooltip-icon-size": 24
+      }
+    ],
+    "ignore-monitor": true
+  },
+  "power-profiles-daemon": {
+    "format": "{icon}",
+    "tooltip-format": "Power profile: {profile}\nDriver: {driver}",
+    "tooltip": true,
+    "format-icons": {
+      "default": "",
+      "performance": "",
+      "balanced": " ",
+      "power-saver": " "
+    }
+  },
+  "pulseaudio": {
+    "format": "{icon} {volume}% {format_source}",
+    "format-bluetooth": "{icon} {volume}% {format_source}",
+    "format-bluetooth-muted": "󰖁  {format_source}",
+    "format-muted": "󰖁 {format_source}",
+    "format-source": " {volume}%",
+    "format-source-muted": " ",
+    "format-icons": {
+      "headphone": " ",
+      "hands-free": "",
+      "headset": "",
+      "phone": "",
+      "portable": "",
+      "car": "",
+      "default": [
+        "",
+        "",
+        " "
+      ]
+    },
+    "on-click": "pavucontrol"
+  },
+  "custom/logout": {
+    "format": "⏻",
+    "tooltip": false,
+    "on-click": "wlogout"
+  },
+  "custom/play-pause": {
+    "tooltip": true,
+    "format": " {icon}{text}",
+    "return-type": "json",
+    "format-icons": {
+      "Paused": " ",
+      "Playing": " "
+    },
+    "on-click-right": "playerctl next",
+    "on-click": "playerctl play-pause",
+    "hide-empty-text": true,
+    "max-length": 40,
+    "exec": "playerctl -a metadata --format '{\"text\": \"{{markup_escape(title)}} - {{artist}}\", \"tooltip\": \"{{markup_escape(title)}}, {{markup_escape(album)}}, {{artist}} \", \"alt\": \"{{status}}\", \"class\": \"{{status}}\"}' -F"
+  },
+  "custom/privacy-dots": {
+    "exec": "~/.bash_scripts/privacy_dots.sh", // or if installed from AUR: "exec": "privacy-dots",
+    "return-type": "json",
+    "interval": 3,
+    "format": "{text}",
+    "tooltip": true,
+    "escape": false,
+    "markup": "pango"
+  },
+  "user": {
+    "format": "({work_H}H↑)",
+    "interval": 60,
+    "icon": true
   }
-},
-"pulseaudio": {
-  "format": "{icon} {volume}% {format_source}",
-  "format-bluetooth": "{icon} {volume}% {format_source}",
-  "format-bluetooth-muted": "󰖁  {format_source}",
-  "format-muted": "󰖁 {format_source}",
-  "format-source": " {volume}%",
-  "format-source-muted": " ",
-  "format-icons": {
-    "headphone": " ",
-    "hands-free": "",
-    "headset": "",
-    "phone": "",
-    "portable": "",
-    "car": "",
-    "default": [
-      "",
-      "",
-      " "
-    ]
-  },
-  "on-click": "pavucontrol"
-},
-"custom/logout": {
-  "format": "⏻",
-  "tooltip": false,
-  "on-click": "wlogout"
-},
-"custom/play-pause": {
-  "tooltip": true,
-  "format": " {icon}{}",
-  "return-type": "json",
-  "format-icons": {
-    "Paused": " ",
-    "Playing": " "
-  },
-  "on-click-right": "playerctl next",
-  "on-click": "playerctl play-pause",
-  "hide-empty-text": true,
-  "max-length": 40,
-  "exec": "playerctl -a metadata --format '{\"text\": \"{{markup_escape(title)}} - {{artist}}\", \"tooltip\": \"{{markup_escape(title)}}, {{markup_escape(album)}}, {{artist}} \", \"alt\": \"{{status}}\", \"class\": \"{{status}}\"}' -F"
-},
-"user": {
-        "format": "({work_H}H↑)",
-        "interval": 60,
-        "icon": true,
-}
 }
