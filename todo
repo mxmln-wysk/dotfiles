@@ -1,0 +1,18 @@
+Was alles noch manuell angepasst werden muss:
+	Network Manager
+	Gedit konfiguration
+	git
+	Fonts
+	Pywalfox in browser
+	hyprpicker
+	hyprlauncher or rofi
+	
+	
+	hyprshutdown?
+	HyprTile?
+
+declaro anpassen
+
+
+greeter = ly
+	systemctl enalbe ly@tty2.service to start	
