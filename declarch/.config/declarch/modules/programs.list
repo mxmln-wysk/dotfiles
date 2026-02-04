@@ -1,0 +1,25 @@
+#program is any executable code that tells a computer what to do with no gui
+android-tools #Android platform tools
+bc #An arbitrary precision calculator language
+declaro-git #a simple declarative wrapper for any package manager
+dropbox #A free service that lets you bring your photos, docs, and videos anywhere and share them easily.
+fastfetch #A feature-rich and performance oriented neofetch like system information tool
+feh #Fast and light imlib2-based image viewer
+github-cli #The GitHub CLI
+htop #Interactive process viewer
+#jq is installed #Command-line JSON processor
+kitty #A modern, hackable, featureful, OpenGL-based terminal emulator
+
+paru #Feature packed AUR helper
+pavucontrol #PulseAudio Volume Control
+php #A general-purpose scripting language that is especially suited to web development
+python #The Python programming language
+python-pywal #Generate and change colorschemes on the fly
+python-pywalfox #Native app used alongside the Pywalfox browser extension
+
+nano #Pico editor clone with enhancements
+nodejs #Evented I/O for V8 javascript ("Current" release)
+
+ntfs-3g #NTFS filesystem driver and utilities
+stow #Manage installation of multiple softwares in the same directory tree
+

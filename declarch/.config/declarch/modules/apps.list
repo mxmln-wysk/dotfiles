@@ -1,0 +1,29 @@
+#programs built for direct user interaction and specific user tasks with gui
+android-studio #The official Android IDE (Stable branch)
+brave-bin #Web browser that blocks ads and trackers by default (binary release)
+code #The Open Source build of Visual Studio Code (vscode) editor
+converseen #Batch image converter and resizer
+errands #Todo application for those who prefer simplicity
+filezilla #Fast and reliable FTP, FTPS and SFTP client
+firefox #Fast, Private & Safe Web Browser
+gedit #Easy-to-use general-purpose text editor
+gimp #GNU Image Manipulation Program
+gnucash #Personal and small-business financial-accounting application
+gparted #A Partition Magic clone, frontend to GNU Parted
+imagemagick #An image viewing/manipulation program
+inkscape #Professional vector graphics editor
+libation #A free, open-source application for downloading and managing your Audible audiobooks
+libreoffice-still #LibreOffice maintenance branch
+libreoffice-still-de #German language pack for LibreOffice still
+logseq-desktop-bin #Privacy-first, open-source platform for knowledge sharing and management
+keepassxc #Cross-platform community-driven port of Keepass password manager
+nautilus #Default file manager for GNOME
+onlyoffice-bin #An office suite that combines text, spreadsheet and presentation editors allowing to create, view and edit local documents
+overskride #A simple yet powerful bluetooth client
+pika-backup #Easy to use backup tool to keep your data safe
+pitivi #Editor for audio/video projects using the GStreamer framework
+prismlauncher #Minecraft launcher with ability to manage multiple instances
+rpi-imager #Raspberry Pi Imaging Utility
+spotify #A proprietary music streaming service
+vlc #Free and open source cross-platform multimedia player and framework
+#zoom #Video Conferencing and Web Conferencing Service

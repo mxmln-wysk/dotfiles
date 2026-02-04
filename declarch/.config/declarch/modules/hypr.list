@@ -1,0 +1,30 @@
+#packages for hyprland
+brightnessctl #A program to read and control device brightnes
+cliphist #wayland clipboard manager
+grim #Screenshot utility for Wayland used from hyprshot
+#hyprcursor Required By hyprland #The hyprland cursor format, library and utilities
+hyprland #a highly customizable dynamic tiling Wayland compositor
+#hyprlauncher #A multipurpose and versatile launcher / picker for Hyprland
+hyprlock #hyprland’s GPU-accelerated screen locking utility
+hyprpaper #a blazing fast wayland wallpaper utility with IPC controls
+hyprpicker #A wlroots-compatible Wayland color picker that does not suck
+hyprpolkitagent #Simple polkit authentication agent for Hyprland, written in QT/QML
+hyprshot #Hyprland screenshot utility
+ly 	#TUI display manager
+nwg-displays #Output management utility for sway and Hyprland Wayland compositors
+nwg-look #GTK settings editor adapted to work on wlroots-based compositors
+playerctl #mpris media player controller and lib for spotify, vlc, audacious, bmp, xmms2, and others.
+qt5-wayland #Provides APIs for Wayland
+qt6-wayland #Provides APIs for Wayland
+rofi #A window switcher, application launcher and dmenu replacement
+slurp #	Select a region in a Wayland compositor
+swaync #A simple GTK based notification daemon for Sway
+waybar #Highly customizable Wayland bar for Sway and Wlroots based compositors
+wl-clipboard #Command-line copy/paste utilities for Wayland
+wlogout #Logout menu for wayland
+xdg-utils #Command line tools that assist applications with a variety of desktop integration tasks
+xdg-desktop-portal-hyprland #xdg-desktop-portal backend for hyprland
+xorg-server #Xorg X server
+xorg-xinit #X.Org initialisation program
+
+
