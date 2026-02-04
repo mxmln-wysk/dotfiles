@@ -24,6 +24,10 @@ swaynotificationcenter => notifications
 jq => window tracker
 pywalfox-native
 
+## wallpaper
+wallpaper made by [FoxyRiot](https://wallhaven.cc/user/FoxyRiot)
+[Link to Image](https://wallhaven.cc/w/2e3ekg)
+
 ## Author
 
 - [@mxmln-wysk](https://www.github.com/mxmln-wysk)

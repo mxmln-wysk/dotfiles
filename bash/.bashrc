@@ -20,6 +20,7 @@ alias list="nix-store --query --requisites /run/current-system | cut -d- -f2- | 
 alias repair5="sudo ntfsfix -d  /dev/sdb5";
 alias repair4="sudo ntfsfix -d  /dev/sdb4";
 alias repair1="sudo ntfsfix -d  /dev/sdb1";
+alias ll='ls -alF'
 
 
 #prompt

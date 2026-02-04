@@ -22,7 +22,8 @@ button {
 }
 
 button:hover, 
-#workspaces button.active {
+#workspaces button.active,
+#workspaces button.focused {
     background: inherit;
     color: @foreground;
     border-top: 2px solid @foreground;
