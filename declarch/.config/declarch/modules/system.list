@@ -26,6 +26,7 @@ power-profiles-daemon #Makes power profiles handling available over D-Bus
 smartmontools #	Control and monitor S.M.A.R.T. enabled ATA and SCSI Hard Drives
 sudo #Give certain users the ability to run some commands as root
 system-config-printer #A CUPS printer configuration tool and status applet
+vi #kinda like vim
 vulkan-intel #Open-source Vulkan driver for Intel GPUs
 wget #Network utility to retrieve files from the web
 wireless_tools #Tools allowing to manipulate the Wireless Extensions
