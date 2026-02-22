@@ -1,11 +1,10 @@
 #program is any executable code that tells a computer what to do with no gui
 android-tools #Android platform tools
 bc #An arbitrary precision calculator language
-coreutils
-diffutils
 declaro-git #a simple declarative wrapper for any package manager
 dropbox #A free service that lets you bring your photos, docs, and videos anywhere and share them easily.
-findutils
+ex-vi-compat
+#findutils
 fastfetch #A feature-rich and performance oriented neofetch like system information tool
 feh #Fast and light imlib2-based image viewer
 github-cli #The GitHub CLI
@@ -17,6 +16,8 @@ paru #Feature packed AUR helper
 pavucontrol #PulseAudio Volume Control
 php #A general-purpose scripting language that is especially suited to web development
 python #The Python programming language
+python311
+python-pip #The PyPA recommended tool for installing Python packages
 python-pywal #Generate and change colorschemes on the fly
 python-pywalfox #Native app used alongside the Pywalfox browser extension
 man-db #A utility for reading man pages	

@@ -5,8 +5,9 @@ bluez-utils #Development and debugging utilities for the bluetooth protocol stac
 cups #OpenPrinting CUPS - daemon package
 cups-pk-helper #A helper that makes system-config-printer use PolicyKit
 efibootmgr #Linux user-space application to modify the EFI Boot Manager
-fakeroot #Tool for simulating superuser privileges
+#fakeroot #Tool for simulating superuser privileges
 git #the fast distributed version control system
+grub
 gst-plugin-pipewire #Multimedia graph framework - pipewire plugin
 intel-media-driver #Intel Media Driver for VAAPI — Broadwell+ iGPUs
 intel-ucode #Microcode update files for Intel CPUs
@@ -24,9 +25,9 @@ pipewire-jack #	Low-latency audio/video router and processor - JACK replacement
 pipewire-pulse #Low-latency audio/video router and processor - PulseAudio replacement
 power-profiles-daemon #Makes power profiles handling available over D-Bus
 smartmontools #	Control and monitor S.M.A.R.T. enabled ATA and SCSI Hard Drives
-sudo #Give certain users the ability to run some commands as root
+#sudo #Give certain users the ability to run some commands as root
 system-config-printer #A CUPS printer configuration tool and status applet
-vi #kinda like vim
+#vi #kinda like vim
 vulkan-intel #Open-source Vulkan driver for Intel GPUs
 wget #Network utility to retrieve files from the web
 wireless_tools #Tools allowing to manipulate the Wireless Extensions
